@@ -176,7 +176,7 @@ defmodule PhxprojWeb.LocationChatLive do
     ]
   end
 
-  defp generate_location_response(location, user_message) do
+  defp generate_location_response(location, _user_message) do
     base_responses = [
       "Interesting... tell me more about that.",
       "I see. That's quite intriguing.",

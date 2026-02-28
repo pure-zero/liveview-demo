@@ -63,7 +63,9 @@ config :phxproj, PhxprojWeb.Endpoint,
       ~r"priv/gettext/.*\.po$"E,
       # Router, Controllers, LiveViews and LiveComponents
       ~r"lib/phxproj_web/router\.ex$"E,
-      ~r"lib/phxproj_web/(controllers|live|components)/.*\.(ex|heex)$"E
+      ~r"lib/phxproj_web/(controllers|live|components)/.*\.(ex|heex)$"E,
+      # Application modules (like locations.ex)
+      ~r"lib/phxproj/.*\.ex$"E
     ]
   ]
 

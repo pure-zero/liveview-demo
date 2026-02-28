@@ -18,6 +18,8 @@ defmodule PhxprojWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/locations", LocationsLive
+    live "/locations/:location_id", LocationChatLive
   end
 
   # Other scopes may use custom stacks.
