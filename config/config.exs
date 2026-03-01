@@ -60,6 +60,11 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# OpenAI configuration
+# Set your API key via environment variable: OPENAI_API_KEY
+# Or configure it in environment-specific config files
+config :phxproj, :openai_api_key, System.get_env("OPENAI_API_KEY")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

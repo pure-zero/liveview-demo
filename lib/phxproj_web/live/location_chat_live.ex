@@ -2,6 +2,7 @@ defmodule PhxprojWeb.LocationChatLive do
   use PhxprojWeb, :live_view
 
   alias Phxproj.Locations
+  alias Phxproj.OpenAIClient
 
   @impl true
   def mount(%{"location_id" => location_id}, _session, socket) do
@@ -12,8 +13,11 @@ defmodule PhxprojWeb.LocationChatLive do
         socket
         |> assign(:page_title, location.name)
         |> assign(:location, location)
-        |> assign(:messages, initial_messages(location))
+        |> assign(:messages, [])
         |> assign(:message_form, to_form(%{"content" => ""}, as: :message))
+
+      # Generate initial welcome message asynchronously
+      send(self(), {:generate_welcome_message})
 
       {:ok, socket}
     else
@@ -34,25 +38,94 @@ defmodule PhxprojWeb.LocationChatLive do
           timestamp: DateTime.utc_now()
         }
 
-        response = generate_location_response(socket.assigns.location, content)
+        # Add user message immediately
+        messages_with_user = socket.assigns.messages ++ [user_message]
         
-        location_message = %{
-          id: System.unique_integer([:positive]),
-          content: response,
-          sender: :location,
-          timestamp: DateTime.utc_now()
-        }
+        socket = 
+          socket
+          |> assign(:messages, messages_with_user)
+          |> assign(:message_form, to_form(%{"content" => ""}, as: :message))
 
-        messages = socket.assigns.messages ++ [user_message, location_message]
+        # Generate AI response asynchronously
+        send(self(), {:generate_ai_response, content, messages_with_user})
 
         socket
-        |> assign(:messages, messages)
-        |> assign(:message_form, to_form(%{"content" => ""}, as: :message))
       else
         socket
       end
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:generate_ai_response, user_content, current_messages}, socket) do
+    conversation_history = 
+      current_messages
+      |> Enum.filter(&(&1.sender != :user or &1.content != user_content))  # Exclude the current user message
+      |> Enum.take(-10)  # Keep last 10 for context
+
+    case OpenAIClient.generate_location_response(socket.assigns.location, user_content, conversation_history) do
+      {:ok, ai_response} ->
+        location_message = %{
+          id: System.unique_integer([:positive]),
+          content: ai_response,
+          sender: :location,
+          timestamp: DateTime.utc_now()
+        }
+
+        messages = current_messages ++ [location_message]
+        {:noreply, assign(socket, :messages, messages)}
+
+      {:error, _reason} ->
+        # Fallback to static response if API fails
+        fallback_response = generate_fallback_response(socket.assigns.location, user_content)
+        
+        location_message = %{
+          id: System.unique_integer([:positive]),
+          content: fallback_response,
+          sender: :location,
+          timestamp: DateTime.utc_now()
+        }
+
+        messages = current_messages ++ [location_message]
+        
+        socket =
+          socket
+          |> assign(:messages, messages)
+          |> put_flash(:error, "AI service temporarily unavailable. Using fallback responses.")
+
+        {:noreply, socket}
+    end
+  end
+
+  @impl true
+  def handle_info({:generate_welcome_message}, socket) do
+    welcome_prompt = "Someone just entered your location. Greet them warmly and offer help. Keep it brief - 1-2 sentences."
+    
+    case OpenAIClient.generate_location_response(socket.assigns.location, welcome_prompt, []) do
+      {:ok, welcome_message} ->
+        location_message = %{
+          id: 1,
+          content: welcome_message,
+          sender: :location,
+          timestamp: DateTime.utc_now()
+        }
+
+        {:noreply, assign(socket, :messages, [location_message])}
+
+      {:error, _reason} ->
+        # Fallback welcome message
+        fallback_welcome = get_fallback_welcome(socket.assigns.location)
+        
+        location_message = %{
+          id: 1,
+          content: fallback_welcome,
+          sender: :location,
+          timestamp: DateTime.utc_now()
+        }
+
+        {:noreply, assign(socket, :messages, [location_message])}
+    end
   end
 
   @impl true
@@ -96,7 +169,7 @@ defmodule PhxprojWeb.LocationChatLive do
         </div>
 
         <div class="bg-white rounded-lg border border-gray-200 flex flex-col h-96">
-          <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages" phx-update="ignore">
+          <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
             <div :for={message <- @messages} class={[
               "flex",
               if(message.sender == :user, do: "justify-end", else: "justify-start")
@@ -146,8 +219,8 @@ defmodule PhxprojWeb.LocationChatLive do
     """
   end
 
-  defp initial_messages(location) do
-    welcome_message = case location.id do
+  defp get_fallback_welcome(location) do
+    case location.id do
       "baker-street" -> "Welcome to 221B Baker Street! This is where your adventure begins and ends."
       "chemist" -> "Welcome to the chemist! I have various potions and remedies. How can I help you?"
       "bank" -> "Good day! Welcome to the bank. How may I assist you with your financial needs?"
@@ -165,18 +238,9 @@ defmodule PhxprojWeb.LocationChatLive do
       "scotland-yard" -> "Welcome to Scotland Yard! Justice never sleeps. How can we assist you?"
       _ -> "Welcome! How can I help you today?"
     end
-
-    [
-      %{
-        id: 1,
-        content: welcome_message,
-        sender: :location,
-        timestamp: DateTime.utc_now()
-      }
-    ]
   end
 
-  defp generate_location_response(location, _user_message) do
+  defp generate_fallback_response(location, _user_message) do
     base_responses = [
       "Interesting... tell me more about that.",
       "I see. That's quite intriguing.",
