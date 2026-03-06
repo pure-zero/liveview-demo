@@ -20,6 +20,7 @@ defmodule PhxprojWeb.Router do
     get "/", PageController, :home
     live "/locations", LocationsLive
     live "/locations/:location_id", LocationChatLive
+    live "/solution", SolutionLive
   end
 
   # Other scopes may use custom stacks.

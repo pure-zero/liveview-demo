@@ -9,12 +9,23 @@ defmodule Phxproj.OpenAIClient do
   Generates a location-specific response using ChatGPT.
   """
   def generate_location_response(location, user_message, conversation_history \\ []) do
+    system_prompt = build_system_prompt(location)
+    generate_response_with_system_prompt(system_prompt, user_message, conversation_history)
+  end
+
+  @doc """
+  Generates a response using a custom system prompt.
+  """
+  def generate_custom_response(user_message, conversation_history \\ [], custom_system_prompt) do
+    generate_response_with_system_prompt(custom_system_prompt, user_message, conversation_history)
+  end
+
+  defp generate_response_with_system_prompt(system_prompt, user_message, conversation_history) do
     case get_api_key() do
       nil ->
         {:error, "OpenAI API key not configured"}
 
       api_key ->
-        system_prompt = build_system_prompt(location)
         messages = build_messages(system_prompt, conversation_history, user_message)
 
         case call_openai_api(api_key, messages) do
