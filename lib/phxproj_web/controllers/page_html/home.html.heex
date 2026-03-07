@@ -15,39 +15,28 @@
         </h1>
 
         <!-- Story content -->
-        <div class="mx-auto max-w-3xl text-left bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 shadow-2xl border border-gray-700">
-          <h2 class="text-2xl font-bold mb-6 text-amber-400 text-center">
-            The Adventure of the Unholy Man
-          </h2>
-          
-          <div class="space-y-4 text-gray-300 leading-relaxed">
-            <p>
-              A strange preacher had come to town, a large morocco-bound Bible under
-              his arm. Scotland Yard is puzzled when the preacher is found stabbed to death
-              in his balcony seat at the Playhouse during a performance of Hamlet.
-            </p>
-            <p>
-              Duchess Tallcourt, who accompanied the victim to the Playhouse, discovered the body upon returning from the powder room after intermission. The preacher's Bible was gone; and on the floor nearby were a German-made cigarette and a packet of aspirin.
-            </p>
-            <p>
-              It was common knowledge that the Duchess, previously a benefactor of the
-              Bishop of Whittenfroth, had come to support the new preacher's views. This
-              greatly angered the Bishop and Duke Tallcourt.
-            </p>
-            <p>
-              The Longworth Acting Troupe was performing the play, Earl Longworth in
-              the lead. Longworth, a rascally cad, had been wooing the Duchess's daughter,
-              Anastasia, in hopes of gaining support for his poverty-stricken troupe.
-            </p>
-            <p>
-              Scotland Yard wants to know a) who killed the preacher, b) the weapon, and
-              c) the motive.
-            </p>
-            <p class="text-amber-400 font-semibold text-center mt-6 text-lg">
-              The game is afoot!
+        <%= if @case do %>
+          <div class="mx-auto max-w-3xl text-left bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 shadow-2xl border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6 text-amber-400 text-center">
+              {@case.title}
+            </h2>
+            
+            <div class="space-y-4 text-gray-300 leading-relaxed">
+              <div class="whitespace-pre-line">
+                {@case.story}
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="mx-auto max-w-3xl text-center bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 shadow-2xl border border-gray-700">
+            <h2 class="text-2xl font-bold mb-6 text-amber-400">
+              No Active Case
+            </h2>
+            <p class="text-gray-300">
+              There are currently no active mystery cases available. Check back later!
             </p>
           </div>
-        </div>
+        <% end %>
 
         <!-- Action buttons -->
         <div class="mt-12 flex flex-col sm:flex-row gap-4 justify-center">

@@ -2,14 +2,7 @@ defmodule PhxprojWeb.SolutionLive do
   use PhxprojWeb, :live_view
 
   alias Phxproj.OpenAIClient
-
-  @correct_solution """
-  The preacher was in fact a thief who had stolen the original manuscript of Hamlet from an exhibit on the Riviera, where he also acquired his tan.
-
-  The preacher disguised the manuscript as a Bible and had Longworth authenticate it for the Duke, whom the preacher hoped would buy it. Longworth, however, in desperate need of money, killed the preacher with Hamlet's sword and stole the manuscript. Longworth, who does not smoke, planted the German made cigarette near the victim's body to throw suspicion from himself, but in the process, he accidentally dropped his packet of aspirin.
-
-  Killer: Longworth; Weapon: Sword; Motive: Manuscript.
-  """
+  alias Phxproj.Cases
 
   @impl true
   def mount(_params, _session, socket) do
@@ -153,11 +146,17 @@ defmodule PhxprojWeb.SolutionLive do
 
 
   defp judge_solution_with_ai(user_solution) do
-    system_prompt = """
-    You are an expert detective judging a solution to "The Adventure of the Unholy Man" mystery. 
+    # Get the active case from database
+    active_case = Cases.get_active_case()
+    
+    if !active_case do
+      {:error, "No active case found"}
+    else
+      system_prompt = """
+      You are an expert detective judging a solution to "#{active_case.title}" mystery. 
 
-    Here is the CORRECT SOLUTION:
-    #{@correct_solution}
+      Here is the CORRECT SOLUTION:
+      #{active_case.solution}
 
     Your task:
     1. Carefully analyze the user's complete solution text
@@ -216,6 +215,7 @@ defmodule PhxprojWeb.SolutionLive do
 
       {:error, reason} ->
         {:error, reason}
+    end
     end
   end
 end

@@ -44,89 +44,35 @@ defmodule Phxproj.OpenAIClient do
   end
 
   defp build_system_prompt(location) do
+    # Get the active case and its clues
+    active_case = Phxproj.Cases.get_active_case()
+    clues = if active_case do
+      Phxproj.Cases.get_clues_for_location(active_case.id, location.id)
+    else
+      []
+    end
+    
     base_prompt = """
     You are roleplaying as a character at #{location.name} in Victorian London. 
     
     Location Description: #{location.description}
     """
 
-    location_specific_prompt = case location.id do
-      "baker-street" ->
-        "You are Mrs. Hudson, the landlady of 221B Baker Street. You're familiar with Sherlock Holmes and Dr. Watson's cases. Be helpful but also mention interesting details about the famous detective's habits."
-
-      "chemist" ->
-        "You are the local chemist. You know about various medicines, potions, and chemicals. You're knowledgeable about both legitimate remedies and more... questionable substances that might be used in detective work. 
-
-        IMPORTANT CLUE: You've noticed that Earl Longworth has been coming in frequently for headache remedies - he seems to suffer from constant headaches."
-
-      "scotland-yard" ->
-        "You are Inspector Lestrade or another police inspector. You're professional but sometimes frustrated with amateur detectives. You deal with warrants, evidence, and official police business. 
-
-        Note: You're investigating the murder case but don't have any specific new clues to share at this time."
-
-      "docks" ->
-        "You are a dock worker or sailor. You've seen ships come and go, heard rumors from distant lands, and know about the less savory characters who frequent the waterfront.
-
-        IMPORTANT CLUE: You overheard that strange preacher saying something peculiar: 'You can't judge a book by its cover.' Seemed like an odd thing for a holy man to say."
-
-      "theater" ->
-        "You are an actor or theater manager at the Playhouse. You know about dramatic performances, costumes, makeup, and the theatrical world. You might have information about people who frequent the arts.
-
-        IMPORTANT CLUE: You've noticed that the Bishop of Whittenfroth was in attendance at the Playhouse on the night of the murder. That's unusual for him."
-
-      "locksmith" ->
-        "You are the local locksmith. You make and repair keys, understand security, and know about who needs access to various places. You're practical and security-minded.
-
-        IMPORTANT CLUE: You've been asked about this before - one of the stage swords from the theater is missing. Someone must have taken it without permission."
-
-      "park" ->
-        "You are a park attendant or regular visitor. You know about people's habits, who meets whom, and the daily routines of those who frequent this peaceful space.
-
-        IMPORTANT CLUE: You often see Earl Longworth here practicing his swordsmanship. He's quite skilled with a blade and comes regularly to practice."
-
-      "museum" ->
-        "You are a museum curator or guard. You're knowledgeable about artifacts, history, and the valuable items in your collection. You notice details and remember visitors.
-
-        IMPORTANT CLUE: Earl Longworth is well-known here - he's considered the foremost authority on the authenticity of original manuscripts. People often bring items to him for verification."
-
-      "hotel" ->
-        "You are the hotel concierge or manager. You're discreet but observant, knowing about guests' comings and goings, and you provide services to travelers.
-
-        IMPORTANT CLUE: You've heard from Anastasia, the Duchess's daughter - she mentioned that she did not like that strange preacher at all. Found him quite unsettling."
-
-      "bank" ->
-        "You are a bank clerk or manager. You handle financial matters, know about transactions, and understand the monetary affairs of the city's residents.
-
-        IMPORTANT CLUE: Duke Tallcourt is one of our most valued clients. He's a well-known collector of original manuscripts and is said to pay very well for authentic pieces."
-
-      "newsagents" ->
-        "You are the newsagent. You know all the latest gossip, news, and rumors. People tell you things, and you hear everything that's happening in the neighborhood.
-
-        IMPORTANT CLUE: Big news recently - the original manuscript of Hamlet was stolen from an exhibit on the Riviera! It's been in all the papers. Quite valuable, that would be."
-
-      "pawnbroker" ->
-        "You are the pawnbroker. You deal in valuable items, know their worth, and often learn interesting stories about why people need quick money. 
-
-        Note: You haven't noticed anything particularly unusual lately, but you're always watching for stolen goods."
-
-      "tobacconist" ->
-        "You are the tobacco shop owner. You know your customers' preferences, and people often chat while selecting their tobacco. You're observant and a good listener.
-
-        IMPORTANT CLUE: The Bishop of Whittenfroth is one of my regular customers - he smokes those German-made cigarettes, quite particular about them. Also, that preacher had quite a handsome tan, which was peculiar for someone in London this time of year."
-
-      "boars-head" ->
-        "You are the tavern keeper or a regular patron. You serve drinks, hear stories, and know the local gossip. The atmosphere is friendly but you're always listening.
-
-        IMPORTANT CLUE: Earl Longworth has been frequenting this place several times in the last month, and from what I can tell, he appears to be having serious money troubles. Been quite worried-looking."
-
-      "carriage-depot" ->
-        "You are a carriage driver or depot manager. You know about transportation around the city, where people go, and you overhear many conversations during rides.
-
-        IMPORTANT CLUE: Just yesterday, I saw Longworth reading from a Bible to both that victim preacher and Duke Tallcourt. Seemed like he was showing them something important in it."
-
-      _ ->
-        "You are a helpful local person who knows about your area and the people who frequent it."
+    # Build character-specific prompt based on location
+    character_prompt = get_character_prompt(location.id)
+    
+    # Add clues from database
+    clue_prompt = if Enum.any?(clues) do
+      clue_text = clues
+        |> Enum.map(& &1.clue_text)
+        |> Enum.join("\n\n")
+      
+      "\n\nIMPORTANT CLUE(S): #{clue_text}"
+    else
+      ""
     end
+    
+    location_specific_prompt = character_prompt <> clue_prompt
 
     special_rules_prompt = if location.special_rules do
       "\n\nImportant: #{location.special_rules}"
@@ -198,5 +144,57 @@ defmodule Phxproj.OpenAIClient do
 
   defp extract_response_content(response) do
     {:error, "Unexpected response format: #{inspect(response)}"}
+  end
+
+  defp get_character_prompt(location_id) do
+    case location_id do
+      "baker-street" ->
+        "You are Mrs. Hudson, the landlady of 221B Baker Street. You're familiar with Sherlock Holmes and Dr. Watson's cases. Be helpful but also mention interesting details about the famous detective's habits."
+
+      "chemist" ->
+        "You are the local chemist. You know about various medicines, potions, and chemicals. You're knowledgeable about both legitimate remedies and more... questionable substances that might be used in detective work."
+
+      "scotland-yard" ->
+        "You are Inspector Lestrade or another police inspector. You're professional but sometimes frustrated with amateur detectives. You deal with warrants, evidence, and official police business."
+
+      "docks" ->
+        "You are a dock worker or sailor. You've seen ships come and go, heard rumors from distant lands, and know about the less savory characters who frequent the waterfront."
+
+      "theater" ->
+        "You are an actor or theater manager at the Playhouse. You know about dramatic performances, costumes, makeup, and the theatrical world. You might have information about people who frequent the arts."
+
+      "locksmith" ->
+        "You are the local locksmith. You make and repair keys, understand security, and know about who needs access to various places. You're practical and security-minded."
+
+      "park" ->
+        "You are a park attendant or regular visitor. You know about people's habits, who meets whom, and the daily routines of those who frequent this peaceful space."
+
+      "museum" ->
+        "You are a museum curator or guard. You're knowledgeable about artifacts, history, and the valuable items in your collection. You notice details and remember visitors."
+
+      "hotel" ->
+        "You are the hotel concierge or manager. You're discreet but observant, knowing about guests' comings and goings, and you provide services to travelers."
+
+      "bank" ->
+        "You are a bank clerk or manager. You handle financial matters, know about transactions, and understand the monetary affairs of the city's residents."
+
+      "newsagents" ->
+        "You are the newsagent. You know all the latest gossip, news, and rumors. People tell you things, and you hear everything that's happening in the neighborhood."
+
+      "pawnbroker" ->
+        "You are the pawnbroker. You deal in valuable items, know their worth, and often learn interesting stories about why people need quick money."
+
+      "tobacconist" ->
+        "You are the tobacco shop owner. You know your customers' preferences, and people often chat while selecting their tobacco. You're observant and a good listener."
+
+      "boars-head" ->
+        "You are the tavern keeper or a regular patron. You serve drinks, hear stories, and know the local gossip. The atmosphere is friendly but you're always listening."
+
+      "carriage-depot" ->
+        "You are a carriage driver or depot manager. You know about transportation around the city, where people go, and you overhear many conversations during rides."
+
+      _ ->
+        "You are a helpful local person who knows about your area and the people who frequent it."
+    end
   end
 end
