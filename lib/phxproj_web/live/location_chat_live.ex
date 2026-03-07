@@ -148,23 +148,9 @@ defmodule PhxprojWeb.LocationChatLive do
             </div>
 
             <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 sm:p-6 mb-6 shadow-xl">
-              <div class="flex flex-col sm:flex-row sm:items-start justify-between">
-                <div class="flex-1">
-                  <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">{@location.name}</h1>
-                  <p class="text-gray-300 mb-3 text-sm sm:text-base">{@location.description}</p>
-                  <%= if @location.special_rules do %>
-                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-amber-900/30 text-amber-300 border border-amber-700/50">
-                      <.icon name="hero-exclamation-triangle" class="w-4 h-4 mr-1" />
-                      {@location.special_rules}
-                    </div>
-                  <% end %>
-                </div>
-                <%= if not @location.can_be_sealed do %>
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900/50 text-blue-300 border border-blue-700 mt-3 sm:mt-0 sm:ml-4">
-                    <.icon name="hero-shield-check" class="w-4 h-4 mr-1" />
-                    Protected Location
-                  </span>
-                <% end %>
+              <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">{@location.name}</h1>
+                <p class="text-gray-300 mb-3 text-sm sm:text-base">{@location.description}</p>
               </div>
             </div>
           </div>
