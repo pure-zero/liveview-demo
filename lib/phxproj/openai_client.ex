@@ -44,13 +44,8 @@ defmodule Phxproj.OpenAIClient do
   end
 
   defp build_system_prompt(location) do
-    # Get the active case and its clues
-    active_case = Phxproj.Cases.get_active_case()
-    clues = if active_case do
-      Phxproj.Cases.get_clues_for_location(active_case.id, location.id)
-    else
-      []
-    end
+    # Get clues from environment variables
+    clues = Phxproj.CaseData.get_clues_for_location(location.id)
     
     base_prompt = """
     You are roleplaying as a character at #{location.name} in Victorian London. 
@@ -61,10 +56,10 @@ defmodule Phxproj.OpenAIClient do
     # Build character-specific prompt based on location
     character_prompt = get_character_prompt(location.id)
     
-    # Add clues from database
+    # Add clues from environment variables
     clue_prompt = if Enum.any?(clues) do
       clue_text = clues
-        |> Enum.map(& &1.clue_text)
+        |> Enum.map(& &1.text)
         |> Enum.join("\n\n")
       
       "\n\nIMPORTANT CLUE(S): #{clue_text}"

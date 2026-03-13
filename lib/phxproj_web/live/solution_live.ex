@@ -2,7 +2,7 @@ defmodule PhxprojWeb.SolutionLive do
   use PhxprojWeb, :live_view
 
   alias Phxproj.OpenAIClient
-  alias Phxproj.Cases
+  alias Phxproj.CaseData
 
   @impl true
   def mount(_params, _session, socket) do
@@ -146,17 +146,14 @@ defmodule PhxprojWeb.SolutionLive do
 
 
   defp judge_solution_with_ai(user_solution) do
-    # Get the active case from database
-    active_case = Cases.get_active_case()
+    # Get the active case from environment variables
+    active_case = CaseData.get_active_case()
     
-    if !active_case do
-      {:error, "No active case found"}
-    else
-      system_prompt = """
-      You are an expert detective judging a solution to "#{active_case.title}" mystery. 
+    system_prompt = """
+    You are an expert detective judging a solution to "#{active_case.title}" mystery. 
 
-      Here is the CORRECT SOLUTION:
-      #{active_case.solution}
+    Here is the CORRECT SOLUTION:
+    #{active_case.solution}
 
     Your task:
     1. Carefully analyze the user's complete solution text
@@ -215,7 +212,6 @@ defmodule PhxprojWeb.SolutionLive do
 
       {:error, reason} ->
         {:error, reason}
-    end
     end
   end
 end

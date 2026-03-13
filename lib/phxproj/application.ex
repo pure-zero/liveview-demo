@@ -9,7 +9,6 @@ defmodule Phxproj.Application do
   def start(_type, _args) do
     children = [
       PhxprojWeb.Telemetry,
-      Phxproj.Repo,
       {DNSCluster, query: Application.get_env(:phxproj, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Phxproj.PubSub},
       # Start a worker by calling: Phxproj.Worker.start_link(arg)

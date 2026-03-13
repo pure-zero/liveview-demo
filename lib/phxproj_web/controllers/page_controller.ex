@@ -1,10 +1,10 @@
 defmodule PhxprojWeb.PageController do
   use PhxprojWeb, :controller
   
-  alias Phxproj.Cases
+  alias Phxproj.CaseData
 
   def home(conn, _params) do
-    active_case = Cases.get_active_case()
+    active_case = CaseData.get_active_case()
     render(conn, :home, case: active_case)
   end
 end

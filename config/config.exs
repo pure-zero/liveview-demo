@@ -8,7 +8,6 @@
 import Config
 
 config :phxproj,
-  ecto_repos: [Phxproj.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configure the endpoint
