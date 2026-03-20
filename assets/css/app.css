@@ -106,3 +106,44 @@
 @import "./rain-animation.css";
 
 /* This file is for your main application CSS */
+
+/* Custom theme colors - change these to update the entire app */
+.theme-primary {
+  @apply text-purple-400;
+}
+
+.theme-primary-hover {
+  @apply text-purple-300;
+}
+
+.theme-primary-bg {
+  @apply bg-purple-500;
+}
+
+.theme-primary-bg-hover {
+  @apply bg-purple-400;
+}
+
+.theme-primary-border {
+  @apply border-purple-600;
+}
+
+.theme-primary-border-hover {
+  @apply border-purple-500;
+}
+
+.theme-primary-gradient {
+  @apply bg-gradient-to-r from-purple-600 to-violet-600;
+}
+
+.theme-primary-gradient-hover {
+  @apply hover:from-purple-500 hover:to-violet-500;
+}
+
+.theme-primary-focus {
+  @apply focus:border-purple-500 focus:ring-purple-500;
+}
+
+.theme-primary-ring {
+  @apply focus:ring-purple-500;
+}

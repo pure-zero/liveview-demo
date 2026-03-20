@@ -22,14 +22,14 @@ defmodule PhxprojWeb.LocationsLive do
       <div class="mx-auto max-w-6xl p-4 sm:p-6">
         <div class="mb-8 text-center">
           <h1 class="text-4xl sm:text-5xl font-bold mb-4">
-            <span class="text-amber-400">London</span> <span class="text-white">Locations</span>
+            <span class="theme-primary">London</span> <span class="text-white">Locations</span>
           </h1>
           <p class="text-gray-300 text-lg mb-6">Choose your destination to begin your investigation</p>
           
           <div class="flex justify-center">
             <.link
               navigate={~p"/solution"}
-              class="inline-flex items-center px-6 py-2 text-sm font-medium rounded-lg bg-gray-700 border border-amber-600 text-amber-400 hover:bg-gray-600 hover:border-amber-500 transition-all duration-200"
+              class="inline-flex items-center px-6 py-2 text-sm font-medium rounded-lg bg-gray-700 theme-primary-border theme-primary hover:bg-gray-600 theme-primary-border-hover transition-all duration-200"
             >
               <.icon name="hero-document-text" class="w-4 h-4 mr-2" />
               Ready to Submit Your Solution?
@@ -56,7 +56,7 @@ defmodule PhxprojWeb.LocationsLive do
       navigate={~p"/locations/#{@location.id}"} 
       class={[
         "block p-4 sm:p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-lg",
-        "hover:bg-gray-750 hover:border-amber-500/50 transition-all duration-200",
+        "hover:bg-gray-750 hover:border-purple-500/50 transition-all duration-200",
         "transform hover:-translate-y-1 hover:shadow-xl",
         "backdrop-blur-sm bg-gray-800/90"
       ]}
@@ -71,7 +71,7 @@ defmodule PhxprojWeb.LocationsLive do
         {@location.description}
       </p>
 
-      <div class="flex items-center text-amber-400 text-sm font-medium group">
+      <div class="flex items-center theme-primary text-sm font-medium group">
         Enter location
         <.icon name="hero-arrow-right" class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
       </div>

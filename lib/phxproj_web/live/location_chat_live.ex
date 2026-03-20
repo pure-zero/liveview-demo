@@ -139,7 +139,7 @@ defmodule PhxprojWeb.LocationChatLive do
               <div class="flex items-center space-x-4">
                 <.link 
                   navigate={~p"/locations"} 
-                  class="text-amber-400 hover:text-amber-300 flex items-center text-sm font-medium transition-colors"
+                  class="theme-primary theme-primary-hover flex items-center text-sm font-medium transition-colors"
                 >
                   <.icon name="hero-arrow-left" class="w-4 h-4 mr-1" />
                   Back to Locations
@@ -164,13 +164,13 @@ defmodule PhxprojWeb.LocationChatLive do
               <div class={[
                 "max-w-xs sm:max-w-sm lg:max-w-md px-3 sm:px-4 py-2 rounded-lg text-sm break-words",
                 if(message.sender == :user, 
-                  do: "bg-amber-600 text-black font-medium", 
+                  do: "theme-primary-bg text-white font-medium", 
                   else: "bg-gray-700 text-gray-100 border border-gray-600")
               ]}>
                 <p class="break-words">{message.content}</p>
                 <p class={[
                   "text-xs mt-1",
-                  if(message.sender == :user, do: "text-amber-900/70", else: "text-gray-400")
+                  if(message.sender == :user, do: "text-purple-900/70", else: "text-gray-400")
                 ]}>
                   {format_time(message.timestamp)}
                 </p>
@@ -189,12 +189,12 @@ defmodule PhxprojWeb.LocationChatLive do
                 field={@message_form[:content]}
                 type="text"
                 placeholder="Type your message..."
-                class="w-full flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-amber-500 focus:ring-amber-500 rounded-lg text-base py-3 px-4 min-h-[48px]"
+                class="w-full flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 theme-primary-focus rounded-lg text-base py-3 px-4 min-h-[48px]"
                 autocomplete="off"
               />
               <button
                 type="submit"
-                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-black bg-amber-500 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 focus:ring-offset-gray-800 transition-colors min-w-[48px] min-h-[48px] shrink-0"
+                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white theme-primary-bg theme-primary-bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 theme-primary-ring focus:ring-offset-gray-800 transition-colors min-w-[48px] min-h-[48px] shrink-0"
               >
                 <.icon name="hero-paper-airplane" class="w-5 h-5" />
               </button>

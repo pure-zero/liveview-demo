@@ -58,7 +58,7 @@ defmodule PhxprojWeb.SolutionLive do
         <div class="mx-auto max-w-4xl p-4 sm:p-6">
           <div class="mb-8 text-center">
             <h1 class="text-3xl sm:text-4xl font-bold mb-4">
-              <span class="text-amber-400">Submit Your</span> <span class="text-white">Solution</span>
+              <span class="theme-primary">Submit Your</span> <span class="text-white">Solution</span>
             </h1>
             <p class="text-gray-300 text-lg">Present your deductions for "The Adventure of the Unholy Man"</p>
           </div>
@@ -71,7 +71,7 @@ defmodule PhxprojWeb.SolutionLive do
               class="space-y-6"
             >
               <div>
-                <label class="block text-sm font-medium text-amber-400 mb-2">
+                <label class="block text-sm font-medium theme-primary mb-2">
                   Present your complete solution
                 </label>
                 <p class="text-gray-400 text-sm mb-3">
@@ -81,7 +81,7 @@ defmodule PhxprojWeb.SolutionLive do
                   name="solution[explanation]"
                   rows="12"
                   placeholder="Who killed the preacher and why? What weapon was used? Provide your complete deduction including evidence, reasoning, and how the crime was committed..."
-                  class="w-full bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-amber-500 focus:ring-amber-500 rounded-md"
+                  class="w-full bg-gray-700 border-gray-600 text-white placeholder-gray-400 theme-primary-focus rounded-md"
                   required
                 ><%= Phoenix.HTML.Form.normalize_value("textarea", @solution_form[:explanation].value) %></textarea>
               </div>
@@ -90,7 +90,7 @@ defmodule PhxprojWeb.SolutionLive do
                 <button
                   type="submit"
                   disabled={@loading}
-                  class="inline-flex items-center px-8 py-3 text-lg font-semibold rounded-lg bg-gradient-to-r from-amber-600 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
+                  class="inline-flex items-center px-8 py-3 text-lg font-semibold rounded-lg theme-primary-gradient text-white theme-primary-gradient-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                 >
                   <%= if @loading do %>
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" fill="none" viewBox="0 0 24 24">
@@ -110,9 +110,9 @@ defmodule PhxprojWeb.SolutionLive do
           <%= if @judgment_result do %>
             <div class="mt-8 bg-gray-800 rounded-lg border border-gray-700 p-6 shadow-xl">
               <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-amber-400 mb-4">Judgment Results</h2>
+                <h2 class="text-2xl font-bold theme-primary mb-4">Judgment Results</h2>
                 
-                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4" style={"background: conic-gradient(#f59e0b 0% #{@judgment_result.score}%, #374151 #{@judgment_result.score}% 100%)"}>
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4" style={"background: conic-gradient(#a855f7 0% #{@judgment_result.score}%, #374151 #{@judgment_result.score}% 100%)"}>
                   <div class="flex items-center justify-center w-20 h-20 bg-gray-800 rounded-full">
                     <span class="text-2xl font-bold text-white"><%= @judgment_result.score %>%</span>
                   </div>
@@ -133,7 +133,7 @@ defmodule PhxprojWeb.SolutionLive do
               </div>
 
               <div class="bg-gray-700 rounded-lg p-4">
-                <h3 class="text-lg font-semibold text-amber-400 mb-2">Feedback:</h3>
+                <h3 class="text-lg font-semibold theme-primary mb-2">Feedback:</h3>
                 <p class="text-gray-300 leading-relaxed"><%= @judgment_result.feedback %></p>
               </div>
             </div>
