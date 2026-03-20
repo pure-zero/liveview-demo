@@ -44,14 +44,14 @@ defmodule PhxprojWeb.LocationsLive do
           </div>
 
           <h1 class="text-4xl sm:text-5xl font-bold mb-4">
-            <span class="theme-primary">London</span> <span class="text-white">Locations</span>
+            <span class="theme-purple-primary">London</span> <span class="text-white">Locations</span>
           </h1>
           <p class="text-gray-300 text-lg mb-6">Choose your destination to begin your investigation</p>
           
           <div class="flex justify-center">
             <.link
               navigate={~p"/solution"}
-              class="inline-flex items-center px-6 py-2 text-sm font-medium rounded-lg bg-gray-700 theme-primary-border theme-primary hover:bg-gray-600 theme-primary-border-hover transition-all duration-200"
+              class="inline-flex items-center px-6 py-2 text-sm font-medium rounded-lg bg-gray-700 theme-purple-border theme-purple-primary hover:bg-gray-600 theme-purple-border-hover transition-all duration-200"
             >
               <.icon name="hero-document-text" class="w-4 h-4 mr-2" />
               Ready to Submit Your Solution?
@@ -93,7 +93,7 @@ defmodule PhxprojWeb.LocationsLive do
         {@location.description}
       </p>
 
-      <div class="flex items-center theme-primary text-sm font-medium group">
+      <div class="flex items-center theme-purple-primary text-sm font-medium group">
         Enter location
         <.icon name="hero-arrow-right" class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
       </div>

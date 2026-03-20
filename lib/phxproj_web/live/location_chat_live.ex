@@ -152,7 +152,7 @@ defmodule PhxprojWeb.LocationChatLive do
               <div class="flex items-center space-x-4">
                 <.link 
                   navigate={~p"/locations"} 
-                  class="theme-primary theme-primary-hover flex items-center text-sm font-medium transition-colors"
+                  class="theme-purple-primary theme-purple-primary-hover flex items-center text-sm font-medium transition-colors"
                 >
                   <.icon name="hero-arrow-left" class="w-4 h-4 mr-1" />
                   Back to Locations
@@ -209,12 +209,12 @@ defmodule PhxprojWeb.LocationChatLive do
                 field={@message_form[:content]}
                 type="text"
                 placeholder="Type your message..."
-                class="w-full flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 theme-primary-focus rounded-lg text-base py-3 px-4 min-h-[48px]"
+                class="w-full flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 theme-purple-focus rounded-lg text-base py-3 px-4 min-h-[48px]"
                 autocomplete="off"
               />
               <button
                 type="submit"
-                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white theme-primary-bg theme-primary-bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 theme-primary-ring focus:ring-offset-gray-800 transition-colors min-w-[48px] min-h-[48px] shrink-0"
+                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white theme-purple-bg theme-purple-bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 theme-purple-ring focus:ring-offset-gray-800 transition-colors min-w-[48px] min-h-[48px] shrink-0"
               >
                 <.icon name="hero-paper-airplane" class="w-5 h-5" />
               </button>
