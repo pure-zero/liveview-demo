@@ -147,3 +147,44 @@
 .theme-primary-ring {
   @apply focus:ring-amber-500;
 }
+
+/* Purple theme classes */
+.theme-purple-primary {
+  @apply text-purple-400;
+}
+
+.theme-purple-primary-hover {
+  @apply text-purple-300;
+}
+
+.theme-purple-bg {
+  @apply bg-purple-500;
+}
+
+.theme-purple-bg-hover {
+  @apply bg-purple-400;
+}
+
+.theme-purple-border {
+  @apply border-purple-600;
+}
+
+.theme-purple-border-hover {
+  @apply border-purple-500;
+}
+
+.theme-purple-gradient {
+  @apply bg-gradient-to-r from-purple-600 to-violet-600;
+}
+
+.theme-purple-gradient-hover {
+  @apply hover:from-purple-500 hover:to-violet-500;
+}
+
+.theme-purple-focus {
+  @apply focus:border-purple-500 focus:ring-purple-500;
+}
+
+.theme-purple-ring {
+  @apply focus:ring-purple-500;
+}
