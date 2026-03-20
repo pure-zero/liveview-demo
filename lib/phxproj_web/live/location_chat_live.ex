@@ -178,25 +178,25 @@ defmodule PhxprojWeb.LocationChatLive do
             </div>
           </div>
 
-          <div class="border-t border-gray-700 p-3 sm:p-4">
+          <div class="border-t border-gray-700 p-4 sm:p-6">
             <.form 
               for={@message_form} 
               id="message-form" 
               phx-submit="send_message"
-              class="flex space-x-2"
+              class="w-full flex space-x-3"
             >
               <.input
                 field={@message_form[:content]}
                 type="text"
                 placeholder="Type your message..."
-                class="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-amber-500 focus:ring-amber-500 rounded-md"
+                class="w-full flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-amber-500 focus:ring-amber-500 rounded-lg text-base py-3 px-4 min-h-[48px]"
                 autocomplete="off"
               />
               <button
                 type="submit"
-                class="inline-flex items-center px-3 sm:px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-amber-500 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 focus:ring-offset-gray-800 transition-colors"
+                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-black bg-amber-500 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 focus:ring-offset-gray-800 transition-colors min-w-[48px] min-h-[48px] shrink-0"
               >
-                <.icon name="hero-paper-airplane" class="w-4 h-4" />
+                <.icon name="hero-paper-airplane" class="w-5 h-5" />
               </button>
             </.form>
           </div>

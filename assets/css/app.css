@@ -102,4 +102,7 @@
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
+/* Import rain effects */
+@import "./rain-animation.css";
+
 /* This file is for your main application CSS */

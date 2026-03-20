@@ -1,0 +1,39 @@
+/* Victorian Rain Animation - Based on Svelte component */
+.rain-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.rain__drop {
+  animation-delay: calc(var(--d) * 1s);
+  animation-duration: calc(var(--a) * 1s);
+  animation-iteration-count: infinite;
+  animation-name: drop;
+  animation-timing-function: linear;
+  height: 30px;
+  left: calc(var(--x) * 1%);
+  position: absolute;
+  top: calc((var(--y) + 50) * -1px);
+}
+
+.rain__drop path {
+  fill: rgba(161, 198, 204, 0.6); /* Blue-grey Victorian rain */
+  opacity: var(--o);
+  transform: scaleY(calc(var(--s) * 1.5));
+}
+
+@keyframes drop {
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh);
+  }
+}
