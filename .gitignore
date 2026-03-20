@@ -38,3 +38,6 @@ npm-debug.log
 # Environment variables
 .env
 
+# Release artifacts
+/rel/
+
