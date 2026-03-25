@@ -35,13 +35,42 @@ defmodule PhxprojWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <main class="min-h-screen">
-      {render_slot(@inner_block)}
-    </main>
+    <div class="min-h-screen bg-gray-900">
+      <nav class="bg-gray-800 border-b border-gray-700 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex items-center justify-center md:justify-between">
+          <!-- Left side - App title -->
+          <div class="hidden md:flex items-center space-x-4">
+            <.link navigate={~p"/"} class="text-xl font-bold text-white hover:theme-purple-primary transition-colors">
+              221B Baker Street
+            </.link>
+          </div>
+
+          <!-- Center - Navigation links -->
+          <div class="flex items-center space-x-6">
+            <.link navigate={~p"/"} class="text-gray-300 hover:text-white transition-colors">
+              Home
+            </.link>
+            <.link navigate={~p"/locations"} class="text-gray-300 hover:text-white transition-colors">
+              Locations
+            </.link>
+            <.link navigate={~p"/solution"} class="text-gray-300 hover:text-white transition-colors">
+              Solution
+            </.link>
+          </div>
+
+          <!-- Right side spacer for desktop -->
+          <div class="hidden md:block w-48"></div>
+        </div>
+      </nav>
+      <main>
+        {render_slot(@inner_block)}
+      </main>
+    </div>
 
     <.flash_group flash={@flash} />
     """
   end
+
 
   @doc """
   Shows the flash group with standard titles and content.

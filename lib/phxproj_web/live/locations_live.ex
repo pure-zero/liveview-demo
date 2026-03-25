@@ -7,12 +7,25 @@ defmodule PhxprojWeb.LocationsLive do
   def mount(_params, _session, socket) do
     locations = Locations.list_all()
 
+    # Set up timer for live server time updates (every 2 seconds for demo)
+    if connected?(socket) do
+      Process.send_after(self(), :update_time, 2_000)
+    end
+
     socket =
       socket
       |> assign(:page_title, "Locations")
       |> assign(:locations, locations)
+      |> assign(:current_time, get_london_time())
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_info(:update_time, socket) do
+    # Schedule the next update (every 2 seconds for demo)
+    Process.send_after(self(), :update_time, 2_000)
+    {:noreply, assign(socket, :current_time, get_london_time())}
   end
 
   @impl true
@@ -21,6 +34,15 @@ defmodule PhxprojWeb.LocationsLive do
     <div class="min-h-screen bg-gray-900 text-white">
       <div class="mx-auto max-w-6xl p-4 sm:p-6">
         <div class="mb-8 text-center">
+          <!-- Live server time display -->
+          <div class="mb-4 flex justify-center">
+            <div class="bg-gray-800 px-4 py-2 rounded-lg border border-gray-700">
+              <span class="text-sm text-gray-300 font-mono">
+                🕒 Server Time: {@current_time}
+              </span>
+            </div>
+          </div>
+
           <h1 class="text-4xl sm:text-5xl font-bold mb-4">
             <span class="theme-primary">London</span> <span class="text-white">Locations</span>
           </h1>
@@ -77,5 +99,21 @@ defmodule PhxprojWeb.LocationsLive do
       </div>
     </.link>
     """
+  end
+
+  defp get_london_time do
+    utc_now = DateTime.utc_now()
+    # Simple offset for London (GMT+0 in winter, GMT+1 in summer)
+    london_offset = if is_dst?(utc_now), do: 1, else: 0
+    
+    utc_now
+    |> DateTime.add(london_offset * 3600, :second)
+    |> Calendar.strftime("%H:%M:%S UTC#{if london_offset > 0, do: "+1", else: ""}")
+  end
+
+  # Simple DST check for UK (last Sunday in March to last Sunday in October)
+  defp is_dst?(datetime) do
+    month = datetime.month
+    month >= 4 && month <= 9  # Approximate DST period
   end
 end

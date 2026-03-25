@@ -6,12 +6,18 @@ defmodule PhxprojWeb.SolutionLive do
 
   @impl true
   def mount(_params, _session, socket) do
+    # Set up timer for live server time updates
+    if connected?(socket) do
+      Process.send_after(self(), :update_time, 10_000)
+    end
+
     socket =
       socket
       |> assign(:page_title, "Submit Solution")
       |> assign(:solution_form, to_form(%{"explanation" => ""}, as: :solution))
       |> assign(:judgment_result, nil)
       |> assign(:loading, false)
+      |> assign(:current_time, get_london_time())
 
     {:ok, socket}
   end
@@ -27,6 +33,13 @@ defmodule PhxprojWeb.SolutionLive do
     send(self(), {:judge_solution, user_solution})
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(:update_time, socket) do
+    # Schedule the next update
+    Process.send_after(self(), :update_time, 10_000)
+    {:noreply, assign(socket, :current_time, get_london_time())}
   end
 
   @impl true
@@ -213,5 +226,21 @@ defmodule PhxprojWeb.SolutionLive do
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  defp get_london_time do
+    utc_now = DateTime.utc_now()
+    # Simple offset for London (GMT+0 in winter, GMT+1 in summer)
+    london_offset = if is_dst?(utc_now), do: 1, else: 0
+    
+    utc_now
+    |> DateTime.add(london_offset * 3600, :second)
+    |> Calendar.strftime("%H:%M:%S UTC#{if london_offset > 0, do: "+1", else: ""}")
+  end
+
+  # Simple DST check for UK (last Sunday in March to last Sunday in October)
+  defp is_dst?(datetime) do
+    month = datetime.month
+    month >= 4 && month <= 9  # Approximate DST period
   end
 end

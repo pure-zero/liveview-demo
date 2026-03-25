@@ -9,12 +9,18 @@ defmodule PhxprojWeb.LocationChatLive do
     location = Locations.get_by_id(location_id)
 
     if location do
+      # Set up timer for live server time updates (every 2 seconds for demo)
+      if connected?(socket) do
+        Process.send_after(self(), :update_time, 2_000)
+      end
+
       socket =
         socket
         |> assign(:page_title, location.name)
         |> assign(:location, location)
         |> assign(:messages, [])
         |> assign(:message_form, to_form(%{"content" => ""}, as: :message))
+        |> assign(:current_time, get_london_time())
 
       # Generate initial welcome message asynchronously
       send(self(), {:generate_welcome_message})
@@ -99,6 +105,13 @@ defmodule PhxprojWeb.LocationChatLive do
   end
 
   @impl true
+  def handle_info(:update_time, socket) do
+    # Schedule the next update (every 2 seconds for demo)
+    Process.send_after(self(), :update_time, 2_000)
+    {:noreply, assign(socket, :current_time, get_london_time())}
+  end
+
+  @impl true
   def handle_info({:generate_welcome_message}, socket) do
     welcome_prompt = "Someone just entered your location. Greet them warmly and offer help. Keep it brief - 1-2 sentences."
     
@@ -144,6 +157,13 @@ defmodule PhxprojWeb.LocationChatLive do
                   <.icon name="hero-arrow-left" class="w-4 h-4 mr-1" />
                   Back to Locations
                 </.link>
+              </div>
+              
+              <!-- Live server time display -->
+              <div class="bg-gray-800 px-3 py-1 rounded border border-gray-700">
+                <span class="text-xs text-gray-300 font-mono">
+                  🕒 {@current_time}
+                </span>
               </div>
             </div>
 
@@ -276,5 +296,21 @@ defmodule PhxprojWeb.LocationChatLive do
     |> DateTime.to_time()
     |> Time.to_string()
     |> String.slice(0, 5)
+  end
+
+  defp get_london_time do
+    utc_now = DateTime.utc_now()
+    # Simple offset for London (GMT+0 in winter, GMT+1 in summer)
+    london_offset = if is_dst?(utc_now), do: 1, else: 0
+    
+    utc_now
+    |> DateTime.add(london_offset * 3600, :second)
+    |> Calendar.strftime("%H:%M:%S UTC#{if london_offset > 0, do: "+1", else: ""}")
+  end
+
+  # Simple DST check for UK (last Sunday in March to last Sunday in October)
+  defp is_dst?(datetime) do
+    month = datetime.month
+    month >= 4 && month <= 9  # Approximate DST period
   end
 end

@@ -17,7 +17,7 @@ defmodule PhxprojWeb.Router do
   scope "/", PhxprojWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive
     live "/locations", LocationsLive
     live "/locations/:location_id", LocationChatLive
     live "/solution", SolutionLive
