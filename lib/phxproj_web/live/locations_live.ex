@@ -31,6 +31,7 @@ defmodule PhxprojWeb.LocationsLive do
   @impl true
   def render(assigns) do
     ~H"""
+    <div id="rain" phx-hook="RainEffect" phx-update="ignore" class="fixed inset-0 pointer-events-none z-2"></div>
     <div class="min-h-screen bg-gray-900 text-white">
       <div class="mx-auto max-w-6xl p-4 sm:p-6">
         <div class="mb-8 text-center">

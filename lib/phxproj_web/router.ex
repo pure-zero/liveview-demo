@@ -17,10 +17,12 @@ defmodule PhxprojWeb.Router do
   scope "/", PhxprojWeb do
     pipe_through :browser
 
-    live "/", HomeLive
-    live "/locations", LocationsLive
-    live "/locations/:location_id", LocationChatLive
-    live "/solution", SolutionLive
+    live_session :default, on_mount: [PhxprojWeb.Rain] do
+      live "/", HomeLive
+      live "/locations", LocationsLive
+      live "/locations/:location_id", LocationChatLive
+      live "/solution", SolutionLive
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -32,9 +32,6 @@ defmodule PhxprojWeb.HomeLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <!-- Rain effect container -->
-      <div id="rain" class="fixed inset-0 pointer-events-none z-0"></div>
-      
       <!-- Background overlay -->
       <div class="fixed inset-0 bg-black bg-opacity-40 pointer-events-none z-1"></div>
 

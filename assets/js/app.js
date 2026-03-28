@@ -24,12 +24,13 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/phxproj"
 import topbar from "../vendor/topbar"
+import {RainEffect} from "./rain-hook"
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks},
+  hooks: {...colocatedHooks, RainEffect},
 })
 
 // Show progress bar on live navigation and form submits
@@ -46,8 +47,8 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-// Import Victorian atmosphere effects
-import "./atmosphere.js"
+// Import Victorian atmosphere effects - Disabled, now using server-driven rain
+// import "./atmosphere.js"
 
 // The lines below enable quality of life phoenix_live_reload
 // development features:

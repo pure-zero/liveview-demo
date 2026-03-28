@@ -35,6 +35,7 @@ defmodule PhxprojWeb.Layouts do
 
   def app(assigns) do
     ~H"""
+    <div id="rain" phx-hook="RainEffect" phx-update="ignore" class="fixed inset-0 pointer-events-none z-2"></div>
     <div class="min-h-screen bg-gray-900">
       <nav class="bg-gray-800 border-b border-gray-700 px-4 py-3">
         <div class="max-w-6xl mx-auto flex items-center justify-center md:justify-between">
