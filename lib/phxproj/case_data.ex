@@ -39,7 +39,7 @@ defmodule Phxproj.CaseData do
       %__MODULE__{
         title: case_title,
         description: case_description,
-        story: case_story,
+        story: String.replace(case_story, "\\n", "\n"),
         solution: case_solution,
         clues: clues
       }
