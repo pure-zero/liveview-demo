@@ -67,7 +67,7 @@ defmodule PhxprojWeb.SolutionLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <div class="min-h-screen bg-gray-900 text-white">
+      <div class="min-h-screen bg-black text-white">
         <div class="mx-auto max-w-4xl p-4 sm:p-6">
           <div class="mb-8 text-center">
             <h1 class="text-3xl sm:text-4xl font-bold mb-4">

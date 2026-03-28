@@ -24,7 +24,7 @@ defmodule PhxprojWeb.LocationsLive do
   @impl true
   def handle_info(:update_time, socket) do
     # Schedule the next update (every 2 seconds for demo)
-    Process.send_after(self(), :update_time, 2_000)
+    Process.send_after(self(), :update_time, 1_000)
     {:noreply, assign(socket, :current_time, get_london_time())}
   end
 
@@ -32,9 +32,19 @@ defmodule PhxprojWeb.LocationsLive do
   def render(assigns) do
     ~H"""
     <div id="rain" phx-hook="RainEffect" phx-update="ignore" class="fixed inset-0 pointer-events-none z-2"></div>
-    <div class="min-h-screen bg-gray-900 text-white">
+    <div class="min-h-screen bg-black text-white">
       <div class="mx-auto max-w-6xl p-4 sm:p-6">
         <div class="mb-8 text-center">
+          <div class="mb-4 flex justify-start">
+            <.link
+              navigate={~p"/"}
+              class="theme-purple-primary theme-purple-primary-hover flex items-center text-sm font-medium transition-colors"
+            >
+              <.icon name="hero-arrow-left" class="w-4 h-4 mr-1" />
+              Back to Case File
+            </.link>
+          </div>
+
           <!-- Live server time display -->
           <div class="mb-4 flex justify-center">
             <div class="bg-gray-800 px-4 py-2 rounded-lg border border-gray-700">

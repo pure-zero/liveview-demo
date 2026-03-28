@@ -9,7 +9,7 @@ defmodule PhxprojWeb.LocationChatLive do
     location = Locations.get_by_id(location_id)
 
     if location do
-      # Set up timer for live server time updates (every 2 seconds for demo)
+      # Set up timer for live server time updates (every 1 seconds for demo)
       if connected?(socket) do
         Process.send_after(self(), :update_time, 1_000)
       end
@@ -106,8 +106,8 @@ defmodule PhxprojWeb.LocationChatLive do
 
   @impl true
   def handle_info(:update_time, socket) do
-    # Schedule the next update (every 2 seconds for demo)
-    Process.send_after(self(), :update_time, 2_000)
+    # Schedule the next update (every 1 seconds for demo)
+    Process.send_after(self(), :update_time, 1_000)
     {:noreply, assign(socket, :current_time, get_london_time())}
   end
 
@@ -145,7 +145,7 @@ defmodule PhxprojWeb.LocationChatLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <div class="min-h-screen bg-gray-900 text-white">
+      <div class="min-h-screen bg-black text-white">
         <div class="mx-auto max-w-4xl p-4 sm:p-6">
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
