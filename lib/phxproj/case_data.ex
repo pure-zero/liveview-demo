@@ -51,8 +51,10 @@ defmodule Phxproj.CaseData do
   Gets clues for a specific location.
   """
   def get_clues_for_location(location_id) do
-    active_case = get_active_case()
-    Enum.filter(active_case.clues, &(&1.location_id == location_id))
+    case get_active_case() do
+      nil -> []
+      active_case -> Enum.filter(active_case.clues, &(&1.location_id == location_id))
+    end
   end
 
 end
