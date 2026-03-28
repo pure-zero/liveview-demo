@@ -176,7 +176,7 @@ defmodule PhxprojWeb.LocationChatLive do
           </div>
 
           <div class="bg-gray-800 rounded-lg border border-gray-700 flex flex-col h-96 sm:h-[500px] shadow-xl">
-          <div class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4" id="chat-messages">
+          <div class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4" id="chat-messages" phx-hook="ScrollToBottom">
             <div :for={message <- @messages} class={[
               "flex",
               if(message.sender == :user, do: "justify-end", else: "justify-start")

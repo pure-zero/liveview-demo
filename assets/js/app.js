@@ -26,11 +26,16 @@ import {hooks as colocatedHooks} from "phoenix-colocated/phxproj"
 import topbar from "../vendor/topbar"
 import {RainEffect} from "./rain-hook"
 
+const ScrollToBottom = {
+  mounted() { this.el.scrollTop = this.el.scrollHeight },
+  updated() { this.el.scrollTop = this.el.scrollHeight },
+}
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks, RainEffect},
+  hooks: {...colocatedHooks, RainEffect, ScrollToBottom},
 })
 
 // Show progress bar on live navigation and form submits
