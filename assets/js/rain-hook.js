@@ -93,7 +93,7 @@ export const RainEffect = {
   
   pruneDroplets() {
     // Keep maximum of 100 droplets
-    if (this.droplets.size > 100) {
+    if (this.droplets.size > 10000) {
       const sortedDroplets = Array.from(this.droplets.entries())
         .sort((a, b) => a[1].timestamp - b[1].timestamp);
       
