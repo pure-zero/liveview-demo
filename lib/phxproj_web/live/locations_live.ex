@@ -7,9 +7,9 @@ defmodule PhxprojWeb.LocationsLive do
   def mount(_params, _session, socket) do
     locations = Locations.list_all()
 
-    # Set up timer for live server time updates (every 2 seconds for demo)
+    # Set up timer for live server time updates (every 1 seconds for demo)
     if connected?(socket) do
-      Process.send_after(self(), :update_time, 2_000)
+      Process.send_after(self(), :update_time, 1_000)
     end
 
     socket =
@@ -48,7 +48,7 @@ defmodule PhxprojWeb.LocationsLive do
             <span class="theme-purple-primary">London</span> <span class="text-white">Locations</span>
           </h1>
           <p class="text-gray-300 text-lg mb-6">Choose your destination to begin your investigation</p>
-          
+
           <div class="flex justify-center">
             <.link
               navigate={~p"/solution"}
@@ -61,9 +61,9 @@ defmodule PhxprojWeb.LocationsLive do
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <.location_card 
-            :for={location <- @locations} 
-            location={location} 
+          <.location_card
+            :for={location <- @locations}
+            location={location}
           />
         </div>
       </div>
@@ -75,8 +75,8 @@ defmodule PhxprojWeb.LocationsLive do
 
   def location_card(assigns) do
     ~H"""
-    <.link 
-      navigate={~p"/locations/#{@location.id}"} 
+    <.link
+      navigate={~p"/locations/#{@location.id}"}
       class={[
         "block p-4 sm:p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-lg",
         "hover:bg-gray-750 hover:border-purple-500/50 transition-all duration-200",
@@ -106,7 +106,7 @@ defmodule PhxprojWeb.LocationsLive do
     utc_now = DateTime.utc_now()
     # Simple offset for London (GMT+0 in winter, GMT+1 in summer)
     london_offset = if is_dst?(utc_now), do: 1, else: 0
-    
+
     utc_now
     |> DateTime.add(london_offset * 3600, :second)
     |> Calendar.strftime("%H:%M:%S UTC#{if london_offset > 0, do: "+1", else: ""}")

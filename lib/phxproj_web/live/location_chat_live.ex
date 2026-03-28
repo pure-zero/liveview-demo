@@ -11,7 +11,7 @@ defmodule PhxprojWeb.LocationChatLive do
     if location do
       # Set up timer for live server time updates (every 2 seconds for demo)
       if connected?(socket) do
-        Process.send_after(self(), :update_time, 2_000)
+        Process.send_after(self(), :update_time, 1_000)
       end
 
       socket =
@@ -46,8 +46,8 @@ defmodule PhxprojWeb.LocationChatLive do
 
         # Add user message immediately
         messages_with_user = socket.assigns.messages ++ [user_message]
-        
-        socket = 
+
+        socket =
           socket
           |> assign(:messages, messages_with_user)
           |> assign(:message_form, to_form(%{"content" => ""}, as: :message))
@@ -65,7 +65,7 @@ defmodule PhxprojWeb.LocationChatLive do
 
   @impl true
   def handle_info({:generate_ai_response, user_content, current_messages}, socket) do
-    conversation_history = 
+    conversation_history =
       current_messages
       |> Enum.filter(&(&1.sender != :user or &1.content != user_content))  # Exclude the current user message
       |> Enum.take(-10)  # Keep last 10 for context
@@ -85,7 +85,7 @@ defmodule PhxprojWeb.LocationChatLive do
       {:error, _reason} ->
         # Fallback to static response if API fails
         fallback_response = generate_fallback_response(socket.assigns.location, user_content)
-        
+
         location_message = %{
           id: System.unique_integer([:positive]),
           content: fallback_response,
@@ -94,7 +94,7 @@ defmodule PhxprojWeb.LocationChatLive do
         }
 
         messages = current_messages ++ [location_message]
-        
+
         socket =
           socket
           |> assign(:messages, messages)
@@ -114,7 +114,7 @@ defmodule PhxprojWeb.LocationChatLive do
   @impl true
   def handle_info({:generate_welcome_message}, socket) do
     welcome_prompt = "Someone just entered your location. Greet them warmly and offer help. Keep it brief - 1-2 sentences."
-    
+
     case OpenAIClient.generate_location_response(socket.assigns.location, welcome_prompt, []) do
       {:ok, welcome_message} ->
         location_message = %{
@@ -129,7 +129,7 @@ defmodule PhxprojWeb.LocationChatLive do
       {:error, _reason} ->
         # Fallback welcome message
         fallback_welcome = get_fallback_welcome(socket.assigns.location)
-        
+
         location_message = %{
           id: 1,
           content: fallback_welcome,
@@ -150,15 +150,15 @@ defmodule PhxprojWeb.LocationChatLive do
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-4">
-                <.link 
-                  navigate={~p"/locations"} 
+                <.link
+                  navigate={~p"/locations"}
                   class="theme-purple-primary theme-purple-primary-hover flex items-center text-sm font-medium transition-colors"
                 >
                   <.icon name="hero-arrow-left" class="w-4 h-4 mr-1" />
                   Back to Locations
                 </.link>
               </div>
-              
+
               <!-- Live server time display -->
               <div class="bg-gray-800 px-3 py-1 rounded border border-gray-700">
                 <span class="text-xs text-gray-300 font-mono">
@@ -183,8 +183,8 @@ defmodule PhxprojWeb.LocationChatLive do
             ]}>
               <div class={[
                 "max-w-xs sm:max-w-sm lg:max-w-md px-3 sm:px-4 py-2 rounded-lg text-sm break-words",
-                if(message.sender == :user, 
-                  do: "theme-primary-bg text-white font-medium", 
+                if(message.sender == :user,
+                  do: "theme-primary-bg text-white font-medium",
                   else: "bg-gray-700 text-gray-100 border border-gray-600")
               ]}>
                 <p class="break-words">{message.content}</p>
@@ -199,9 +199,9 @@ defmodule PhxprojWeb.LocationChatLive do
           </div>
 
           <div class="border-t border-gray-700 p-4 sm:p-6">
-            <.form 
-              for={@message_form} 
-              id="message-form" 
+            <.form
+              for={@message_form}
+              id="message-form"
               phx-submit="send_message"
               class="w-full flex space-x-3"
             >
@@ -302,7 +302,7 @@ defmodule PhxprojWeb.LocationChatLive do
     utc_now = DateTime.utc_now()
     # Simple offset for London (GMT+0 in winter, GMT+1 in summer)
     london_offset = if is_dst?(utc_now), do: 1, else: 0
-    
+
     utc_now
     |> DateTime.add(london_offset * 3600, :second)
     |> Calendar.strftime("%H:%M:%S UTC#{if london_offset > 0, do: "+1", else: ""}")
