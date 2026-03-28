@@ -49,6 +49,8 @@ defmodule Phxproj.OpenAIClient do
 
     base_prompt = """
     You are roleplaying as a character at #{location.name} in Victorian London.
+    You are speaking directly with Sherlock Holmes, the famous detective of 221B Baker Street.
+    You know him well and address him by name. You are eager to help him with his investigation.
 
     Location Description: #{location.description}
     """

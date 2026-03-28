@@ -17,7 +17,7 @@ defmodule PhxprojWeb.Rain do
 
   defp handle_rain_info(:init_rain, socket) do
     droplets = generate_rain_droplets(50)
-    Process.send_after(self(), :update_rain, 3_000)
+    Process.send_after(self(), :update_rain, 100)
 
     {:halt,
      socket
@@ -28,7 +28,7 @@ defmodule PhxprojWeb.Rain do
   defp handle_rain_info(:update_rain, socket) do
     # new_droplets = generate_rain_droplets(:rand.uniform() * 10 + 3|> round())
     new_droplets = generate_rain_droplets(1)
-    Process.send_after(self(), :update_rain, 200)
+    Process.send_after(self(), :update_rain, 100)
     {:halt, push_event(socket, "rain_new_droplets", %{droplets: new_droplets})}
   end
 

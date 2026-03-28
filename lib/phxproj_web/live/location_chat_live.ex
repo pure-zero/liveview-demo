@@ -113,7 +113,7 @@ defmodule PhxprojWeb.LocationChatLive do
 
   @impl true
   def handle_info({:generate_welcome_message}, socket) do
-    welcome_prompt = "Someone just entered your location. Greet them warmly and offer help. Keep it brief - 1-2 sentences."
+    welcome_prompt = "Sherlock Holmes has just entered your location. Greet him by name, warmly and with familiarity. Keep it brief - 1-2 sentences."
 
     case OpenAIClient.generate_location_response(socket.assigns.location, welcome_prompt, []) do
       {:ok, welcome_message} ->
