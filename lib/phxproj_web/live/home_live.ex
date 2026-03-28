@@ -49,11 +49,9 @@ defmodule PhxprojWeb.HomeLive do
               <h2 class="text-2xl font-bold mb-6 theme-purple-primary text-center">
                 {@case.title}
               </h2>
-              
+
               <div class="space-y-4 text-gray-300 leading-relaxed text-base sm:text-lg">
-                <div class="whitespace-pre-line leading-7">
-                  {@case.story}
-                </div>
+                <div class="whitespace-pre-wrap leading-7">{String.trim(@case.story)}</div>
               </div>
             </div>
           <% else %>
@@ -79,7 +77,7 @@ defmodule PhxprojWeb.HomeLive do
               </svg>
               Begin Your Investigation
             </a>
-            
+
             <a
               href={~p"/solution"}
               class="inline-flex items-center px-8 py-4 text-lg font-semibold rounded-lg bg-gray-700 theme-purple-border theme-purple-primary hover:bg-gray-600 theme-purple-border-hover transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
@@ -100,7 +98,7 @@ defmodule PhxprojWeb.HomeLive do
     utc_now = DateTime.utc_now()
     # Simple offset for London (GMT+0 in winter, GMT+1 in summer)
     london_offset = if is_dst?(utc_now), do: 1, else: 0
-    
+
     utc_now
     |> DateTime.add(london_offset * 3600, :second)
     |> Calendar.strftime("%H:%M:%S UTC#{if london_offset > 0, do: "+1", else: ""}")

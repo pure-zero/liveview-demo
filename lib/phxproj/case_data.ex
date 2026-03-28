@@ -6,7 +6,6 @@ defmodule Phxproj.CaseData do
   defstruct [:title, :description, :story, :solution, :clues]
 
   @type clue :: %{location_id: String.t(), text: String.t()}
-  
   @type t :: %__MODULE__{
     title: String.t(),
     description: String.t(),
