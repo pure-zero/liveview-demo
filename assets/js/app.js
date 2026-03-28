@@ -31,11 +31,17 @@ const ScrollToBottom = {
   updated() { this.el.scrollTop = this.el.scrollHeight },
 }
 
+const ClearOnSubmit = {
+  mounted() {
+    this.handleEvent("clear_message_input", () => this.el.reset())
+  }
+}
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks, RainEffect, ScrollToBottom},
+  hooks: {...colocatedHooks, RainEffect, ScrollToBottom, ClearOnSubmit},
 })
 
 // Show progress bar on live navigation and form submits

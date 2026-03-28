@@ -51,6 +51,7 @@ defmodule PhxprojWeb.LocationChatLive do
           socket
           |> assign(:messages, messages_with_user)
           |> assign(:message_form, to_form(%{"content" => ""}, as: :message))
+          |> push_event("clear_message_input", %{})
 
         # Generate AI response asynchronously
         send(self(), {:generate_ai_response, content, messages_with_user})
@@ -203,15 +204,18 @@ defmodule PhxprojWeb.LocationChatLive do
               for={@message_form}
               id="message-form"
               phx-submit="send_message"
+              phx-hook="ClearOnSubmit"
               class="w-full flex space-x-3"
             >
-              <.input
-                field={@message_form[:content]}
-                type="text"
-                placeholder="Type your message..."
-                class="w-full flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 theme-purple-focus rounded-lg text-base py-3 px-4 min-h-[48px]"
-                autocomplete="off"
-              />
+              <div class="flex-1 min-w-0">
+                <.input
+                  field={@message_form[:content]}
+                  type="text"
+                  placeholder="Type your message..."
+                  class="w-full bg-gray-700 border-gray-600 text-white placeholder-gray-400 theme-purple-focus rounded-lg text-base py-3 px-4 min-h-[48px]"
+                  autocomplete="off"
+                />
+              </div>
               <button
                 type="submit"
                 class="inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white theme-purple-bg theme-purple-bg-hover focus:outline-none focus:ring-2 focus:ring-offset-2 theme-purple-ring focus:ring-offset-gray-800 transition-colors min-w-[48px] min-h-[48px] shrink-0"
