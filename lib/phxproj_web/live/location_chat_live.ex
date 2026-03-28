@@ -228,67 +228,38 @@ defmodule PhxprojWeb.LocationChatLive do
   end
 
   defp get_fallback_welcome(location) do
-    case location.id do
-      "baker-street" -> "Welcome to 221B Baker Street! This is where your adventure begins and ends."
-      "chemist" -> "Welcome to the chemist! I have various potions and remedies. How can I help you?"
-      "bank" -> "Good day! Welcome to the bank. How may I assist you with your financial needs?"
-      "carriage-depot" -> "Welcome to the carriage depot! Need transportation around the city?"
-      "docks" -> "Ahoy! Welcome to the busy docks. The ships come and go at all hours."
-      "hotel" -> "Welcome to our grand hotel! Are you looking for accommodation or information?"
-      "locksmith" -> "Welcome to the locksmith! I can provide you with new keys when needed."
-      "museum" -> "Welcome to the museum! We have fascinating exhibits and artifacts."
-      "newsagents" -> "Welcome to the newsagent's! Fresh newspapers and the latest gossip!"
-      "park" -> "Welcome to the peaceful park! A lovely place for a stroll and conversation."
-      "pawnbroker" -> "Welcome to the pawnbroker! I deal in valuable items and curiosities."
-      "theater" -> "Welcome to the theater! The show must go on! What brings you here?"
-      "boars-head" -> "Welcome to the Boar's Head! Pull up a chair and have a drink!"
-      "tobacconist" -> "Welcome to the tobacco shop! Fine pipes and premium tobacco available."
-      "scotland-yard" -> "Welcome to Scotland Yard! Justice never sleeps. How can we assist you?"
-      _ -> "Welcome! How can I help you today?"
+    clue = case Phxproj.CaseData.get_clues_for_location(location.id) do
+      [c | _] -> " And since you're here — #{c.text}"
+      [] -> ""
     end
+
+    base = case location.id do
+      "baker-street" -> "Welcome to 221B Baker Street!"
+      "chemist" -> "Welcome to the chemist!"
+      "bank" -> "Good day, welcome to the bank."
+      "carriage-depot" -> "Welcome to the carriage depot!"
+      "docks" -> "Ahoy! Welcome to the docks."
+      "hotel" -> "Welcome to our grand hotel!"
+      "locksmith" -> "Welcome to the locksmith!"
+      "museum" -> "Welcome to the museum!"
+      "newsagents" -> "Welcome to the newsagent's!"
+      "park" -> "Welcome to the park!"
+      "pawnbroker" -> "Welcome to the pawnbroker!"
+      "theater" -> "Welcome to the theater!"
+      "boars-head" -> "Welcome to the Boar's Head!"
+      "tobacconist" -> "Welcome to the tobacco shop!"
+      "scotland-yard" -> "Welcome to Scotland Yard!"
+      _ -> "Welcome!"
+    end
+
+    base <> clue
   end
 
   defp generate_fallback_response(location, _user_message) do
-    base_responses = [
-      "Interesting... tell me more about that.",
-      "I see. That's quite intriguing.",
-      "Hmm, that reminds me of something...",
-      "That's fascinating! What else can you tell me?",
-      "I've heard whispers about such things around here.",
-      "How curious! That's not something you hear every day."
-    ]
-
-    location_specific_responses = case location.id do
-      "baker-street" -> [
-        "Holmes would find that most interesting...",
-        "That sounds like the beginning of a case!",
-        "The game is afoot, as they say!"
-      ]
-      "chemist" -> [
-        "That sounds like it might require a special remedy.",
-        "I may have something in my collection for that...",
-        "Chemistry can solve many mysteries, you know."
-      ]
-      "scotland-yard" -> [
-        "We'll need to make a note of that in our records.",
-        "That could be important evidence!",
-        "The law takes such matters very seriously."
-      ]
-      "docks" -> [
-        "Sailors bring all sorts of stories from distant lands.",
-        "Strange things wash up with the tide sometimes.",
-        "The ships carry more than just cargo, if you know what I mean."
-      ]
-      "theater" -> [
-        "All the world's a stage, as Shakespeare said!",
-        "That would make for quite a dramatic scene!",
-        "Reality and fiction often blur in these halls."
-      ]
-      _ -> []
+    case Phxproj.CaseData.get_clues_for_location(location.id) do
+      [clue | _] -> clue.text
+      [] -> "I'm afraid I don't know much that would help you with that."
     end
-
-    all_responses = base_responses ++ location_specific_responses
-    Enum.random(all_responses)
   end
 
   defp format_time(datetime) do

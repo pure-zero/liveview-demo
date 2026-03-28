@@ -46,27 +46,27 @@ defmodule Phxproj.OpenAIClient do
   defp build_system_prompt(location) do
     # Get clues from environment variables
     clues = Phxproj.CaseData.get_clues_for_location(location.id)
-    
+
     base_prompt = """
-    You are roleplaying as a character at #{location.name} in Victorian London. 
-    
+    You are roleplaying as a character at #{location.name} in Victorian London.
+
     Location Description: #{location.description}
     """
 
     # Build character-specific prompt based on location
     character_prompt = get_character_prompt(location.id)
-    
+
     # Add clues from environment variables
     clue_prompt = if Enum.any?(clues) do
       clue_text = clues
         |> Enum.map(& &1.text)
         |> Enum.join("\n\n")
-      
+
       "\n\nIMPORTANT CLUE(S): #{clue_text}"
     else
       ""
     end
-    
+
     location_specific_prompt = character_prompt <> clue_prompt
 
     special_rules_prompt = if location.special_rules do
@@ -77,22 +77,20 @@ defmodule Phxproj.OpenAIClient do
 
     base_prompt <> "\n\n" <> location_specific_prompt <> special_rules_prompt <> """
 
-    IMPORTANT: If you have a clue marked as "IMPORTANT CLUE", weave it naturally into your conversations when relevant. Don't just blurt it out immediately, but bring it up when it makes sense based on what the visitor asks or discusses.
-    
+    IMPORTANT: You have information directly relevant to the murder investigation. Be eager to share it — work your clue into an early response naturally. You want to help solve this case. Don't wait for the perfect moment; bring it up straight away.
+
     Keep your responses:
     - In character for Victorian London (1880s-1890s)
     - Conversational and engaging
-    - Helpful but also realistic to your role
     - Around 1-3 sentences unless asked for more detail
-    - Include relevant details about your location or expertise when appropriate
-    - Share your important clues naturally when the conversation flows that way
+    - Always weave in your clue early, even if unprompted
     """
   end
 
   defp build_messages(system_prompt, conversation_history, user_message) do
     system_message = %{"role" => "system", "content" => system_prompt}
-    
-    history_messages = 
+
+    history_messages =
       conversation_history
       |> Enum.take(-10)  # Keep last 10 messages for context
       |> Enum.map(fn message ->
