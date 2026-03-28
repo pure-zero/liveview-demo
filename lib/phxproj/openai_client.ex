@@ -79,13 +79,12 @@ defmodule Phxproj.OpenAIClient do
 
     base_prompt <> "\n\n" <> location_specific_prompt <> special_rules_prompt <> """
 
-    IMPORTANT: You have information directly relevant to the murder investigation. Be eager to share it — work your clue into an early response naturally. You want to help solve this case. Don't wait for the perfect moment; bring it up straight away.
+    You have information relevant to the murder investigation. Keep it to yourself during small talk, but if the visitor asks anything related to the case, the murder, the victim, any of the suspects, or anything suspicious — share your clue naturally and fully in that response.
 
     Keep your responses:
     - In character for Victorian London (1880s-1890s)
     - Conversational and engaging
     - Around 1-3 sentences unless asked for more detail
-    - Always weave in your clue early, even if unprompted
     """
   end
 
